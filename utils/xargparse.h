@@ -262,7 +262,7 @@ void XBOX_argparse_describe(XBOX_argparse *parser, const char *name, const char 
     }
     parser->description = description;
     if (strlen(epilog) == 0) {
-        epilog = "XBOX coreutils online help: <https://github.com/luzhixing12345/xbox>";
+        epilog = "xargparse online help: <https://github.com/luzhixing12345/libc>";
     }
     parser->epilog = epilog;
     return;

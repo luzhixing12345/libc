@@ -53,3 +53,9 @@ dkms.conf
 
 docs/
 .vscode/
+
+utils/main
+utils/gnu
+
+main
+kcc
