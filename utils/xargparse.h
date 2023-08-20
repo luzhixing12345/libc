@@ -150,7 +150,6 @@ void XBOX_free_argparse(XBOX_argparse *parser) {
     // fprintf(stderr, "finished free options\n");
 }
 
-
 /**
  * @brief (原地操作)去除字符串开头结尾的的空格和双引号 ""
  *
@@ -277,6 +276,37 @@ void XBOX_argparse_describe(XBOX_argparse *parser, const char *name, const char 
 void value_pass(XBOX_argparse *parser, argparse_option *option);
 
 /**
+ * @brief 去除字符串中的 \\
+ *
+ * @param value
+ * @return char*
+ */
+char *clearEscapeCharaters(char *value) {
+    int length = strlen(value);
+    int escape_char_number = 0;
+    for (int i = 0; i < length; i++) {
+        if (value[i] == '\\') {
+            escape_char_number += 1;
+        }
+    }
+    if (!escape_char_number) {
+        return value;
+    }
+    int pos = 0;
+    for (int i = 0; i < length; i++) {
+        if (value[i] != '\\') {
+            value[pos++] = value[i];
+        } else {
+            value[pos++] = value[++i];
+        }
+    }
+    // printf("length = %d pos = %d x = %d\n", length, pos, length - escape_char_number);
+    value[pos] = 0;
+    value = (char *)realloc(value, length - escape_char_number + 1);
+    return value;
+}
+
+/**
  * @brief 初步解析参数
  *
  * @param option
@@ -363,7 +393,7 @@ int parse_optionstr(argparse_option *option) {
                 // printf("[%s] -> [%s]:[%s]\n",argument, key, value);
                 free(argument);
                 if (!strcmp(key, "help")) {
-                    option->help_info = value;
+                    option->help_info = clearEscapeCharaters(value);
                 } else if (!strcmp(key, "name")) {
                     option->name = value;
                 } else if (!strcmp(key, "append")) {
@@ -378,6 +408,13 @@ int parse_optionstr(argparse_option *option) {
             }
             // printf("%s\n", argument);
             // free(argument);
+        } else if (str[i] == '\\') {
+            if (i + 1 < length) {
+                i++;
+            } else {
+                fprintf(stderr, "%s: wrong position \\ in %s\n", XBOX_ARGS_BUILD_ERROR, str);
+                return XBOX_FORMAT_ERROR;
+            }
         }
     }
     return 0;
@@ -496,14 +533,14 @@ void XBOX_argparse_info(XBOX_argparse *parser) {
         printf("%-*s", left_width, (option->append_info == NULL || !option->short_name) ? "" : option->append_info);
         int mid_rest_space = mid_width;
         if (option->long_name) {
-            printf("%s",option->long_name);
+            printf("%s", option->long_name);
             mid_rest_space -= strlen(option->long_name);
             if (!option->short_name && option->append_info) {
-                printf("%s",option->append_info);
-                mid_rest_space-=strlen(option->append_info);
+                printf("%s", option->append_info);
+                mid_rest_space -= strlen(option->append_info);
             }
         }
-        printf("%*s",mid_rest_space,"");
+        printf("%*s", mid_rest_space, "");
 
         if (option->help_info) {
             printf("%s", option->help_info);
@@ -976,6 +1013,5 @@ void XBOX_argparse_parse(XBOX_argparse *parser, int argc, const char **argv) {
     argparse_parse_argv(parser, argc, argv);
     return;
 }
-
 
 #endif  // XBOX_XARGPARSE_H
