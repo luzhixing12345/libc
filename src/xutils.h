@@ -33,8 +33,8 @@
 #define XBOX_IS_DIR(dp) (dp->type == DT_DIR)
 
 typedef struct XBOX_File {
-    unsigned char type;       // 文件类型
-    char name[256];           // 文件名
+    unsigned char type;  // 文件类型
+    char name[256];      // 文件名
 } XBOX_File;
 
 typedef struct XBOX_Dir {
@@ -212,6 +212,10 @@ char* XBOX_colorprint(const char* word, const char* full_path) {
     char* color_code = NULL;
     struct stat file_stat;
     static char result[XBOX_PRINT_BUFFER_SIZE];
+    if (!isatty(1)) {
+        sprintf(result, "%s", word);
+        return result;
+    }
     if (stat(full_path, &file_stat) == -1) {
         // error occurred while getting file status
         color_code = XBOX_ANSI_COLOR_RESET;  // set the color to default

@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -Wunused -Werror -Wformat-security
 
-SRC = $(wildcard utils/*.c)
+SRC = $(wildcard examples/*.c)
 OBJ = $(SRC:.c=.o)
 EXE = $(SRC:.c=)
 
@@ -10,7 +10,6 @@ all: $(EXE)
 
 $(EXE): %: %.o
 	$(CC) $< -o $@
-	mv -i $@ ./
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -19,3 +18,22 @@ $(OBJS): %.o: %.c
 
 clean:
 	rm $(EXE) $(OBJ)
+
+## for develop
+XBOX_HEADER_FILES = $(wildcard src/*.h)
+TARGET_DIR = xbox
+
+link: $(XBOX_HEADER_FILES)
+	@rm -r ~/coreutils/src/xbox
+	@rm -r ~/binutils/src/xbox
+	@mkdir -p ~/coreutils/src/xbox
+	@mkdir -p ~/binutils/src/xbox
+	@ln -s ~/libc/src/*.h ~/coreutils/src/xbox
+	@ln -s ~/libc/src/*.h ~/binutils/src/xbox
+	
+ulink:
+	@-rm -r ~/coreutils/src/xbox
+	@-rm -r ~/binutils/src/xbox
+	@cp -r src/ ~/coreutils/src/xbox
+	@cp -r src/ ~/binutils/src/xbox
+

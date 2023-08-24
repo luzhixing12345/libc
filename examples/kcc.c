@@ -1,5 +1,5 @@
 
-#include "xargparse.h"
+#include "../src/xargparse.h"
 
 char *output = NULL;
 char **include_path = NULL;

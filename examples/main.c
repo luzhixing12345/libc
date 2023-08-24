@@ -1,4 +1,4 @@
-#include "xargparse.h"
+#include "../src/xargparse.h"
 
 int main(int argc, const char **argv) {
     int i;
