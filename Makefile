@@ -30,10 +30,12 @@ link: $(XBOX_HEADER_FILES)
 	@mkdir -p ~/binutils/src/xbox
 	@ln -s ~/libc/src/*.h ~/coreutils/src/xbox
 	@ln -s ~/libc/src/*.h ~/binutils/src/xbox
+	@echo finished link
 	
 ulink:
 	@-rm -r ~/coreutils/src/xbox
 	@-rm -r ~/binutils/src/xbox
-	@cp -r src/ ~/coreutils/src/xbox
-	@cp -r src/ ~/binutils/src/xbox
+	@cp -r ~/libc/src/ ~/coreutils/src/xbox
+	@cp -r ~/libc/src/ ~/binutils/src/xbox
+	@echo remove link
 

@@ -34,11 +34,11 @@
 
 typedef struct XBOX_File {
     unsigned char type;  // 文件类型
-    char name[256];      // 文件名
+    char name[NAME_MAX];      // 文件名
 } XBOX_File;
 
 typedef struct XBOX_Dir {
-    char name[256];
+    char name[NAME_MAX];
     int count;    // 目录+文件数量
     int d_count;  // 目录数量
     int f_count;  // 文件数量
@@ -61,12 +61,14 @@ XBOX_Dir* XBOX_open_dir(const char* path, int flag) {
     int length;
     dir = opendir(path);
     if (dir == NULL) {
-        static char error_info[1024];
-        memset(error_info, 0, 1024);
+        // 12 是 "open failed " 的长度
+        static char error_info[PATH_MAX+12];
+        memset(error_info, 0, PATH_MAX+12);
         sprintf(error_info, "open failed %s", path);
         perror(error_info);
         exit(1);
     }
+    
     XBOX_Dir* directory = (XBOX_Dir*)malloc(sizeof(XBOX_Dir));
     memset(directory, 0, sizeof(XBOX_Dir));
     while ((entry = readdir(dir)) != NULL) {
@@ -208,7 +210,7 @@ int is_archive(const char* path) {
  * @param word 打印的字
  * @param full_path 全路径
  */
-char* XBOX_colorprint(const char* word, const char* full_path) {
+char* XBOX_file_print(const char* word, const char* full_path) {
     char* color_code = NULL;
     struct stat file_stat;
     static char result[XBOX_PRINT_BUFFER_SIZE];

@@ -260,7 +260,7 @@ void XBOX_argparse_describe(XBOX_argparse *parser, const char *name, const char 
         description = "About how to use the program";
     }
     parser->description = description;
-    if (strlen(epilog) == 0) {
+    if (epilog == NULL || strlen(epilog) == 0) {
         epilog = "xargparse online help: <https://github.com/luzhixing12345/libc>";
     }
     parser->epilog = epilog;
@@ -397,7 +397,7 @@ int parse_optionstr(argparse_option *option) {
                 } else if (!strcmp(key, "name")) {
                     option->name = value;
                 } else if (!strcmp(key, "append")) {
-                    option->append_info = value;
+                    option->append_info = clearEscapeCharaters(value);
                 } else {
                     fprintf(stderr, "%s: unsupported argument [%s=%s] in %s\n", XBOX_ARGS_BUILD_ERROR, key, value, str);
                     free(key);
@@ -734,15 +734,22 @@ void argparse_parse_argv(XBOX_argparse *parser, int argc, const char **argv) {
             if (option == NULL) {
                 if (parser->flag & XBOX_ARGPARSE_ENABLE_EQUAL) {
                     int pos = XBOX_findChar(argv[i], '=');
-                    if (pos != -1 && pos == 2) {
-                        char *short_name = XBOX_splice(argv[i], 0, 1);
-                        option = check_argparse_soptions(parser, short_name);
-                        free(short_name);
+                    if (pos != -1) {
+                        char *name = XBOX_splice(argv[i], 0, pos - 1);
+                        if (strlen(name) >= 2 && name[0] == '-') {
+                            if (name[1] == '-') {
+                                option = check_argparse_loptions(parser, name);
+                            } else {
+                                option = check_argparse_soptions(parser, name);
+                            }
+                        }
+
+                        free(name);
                         if (option) {
                             if (option->value) {
                                 free(option->value);
                             }
-                            char *value = XBOX_splice(argv[i], 3, -1);
+                            char *value = XBOX_splice(argv[i], pos+1, -1);
                             option->value = value;
                             value_pass(parser, option);
                             continue;
@@ -806,7 +813,6 @@ void argparse_parse_argv(XBOX_argparse *parser, int argc, const char **argv) {
                     }
                     continue;
                 }
-
                 fprintf(stderr, "%s: no match options for [%s]\n", XBOX_ARGS_PARSE_ERROR, argv[i]);
                 XBOX_free_argparse(parser);
                 exit(XBOX_FORMAT_ERROR);
