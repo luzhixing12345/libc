@@ -15,23 +15,19 @@ int debug = 0;
 
 int main(int argc, const char **argv) {
     argparse_option options[] = {
-        XBOX_ARG_BOOLEAN(NULL, [-c][name = "compile"][help = "Compile and assemble, but do not link."]),
-        XBOX_ARG_STR(&output, [-o][name = "output"][help = "Place the output into <file>."][append = " <file>"]),
-        XBOX_ARG_STRS(&include_path,
-                      [-I][name = "include"][append = "<dir>"]
-                          [help = "Add <dir> to the end of the main include path."]),
+        XBOX_ARG_BOOLEAN(NULL, "-c", NULL, "Compile and assemble, but do not link.", NULL, "compile"),
+        XBOX_ARG_STR(&output, "-o", NULL, "Place the output into <file>.", " <file>", NULL),
+        XBOX_ARG_STRS(&include_path, "-I", NULL, "Add <dir> to the end of the main include path.", "<dir>", "include"),
         XBOX_ARG_STRS(
-            &library_path,
-            [-L][append = "<dir>"][name = "library_path"][help = "Add <dir> to the end of the main library path. "]),
-        XBOX_ARG_STRS(&library_name,
-                      [-l][name = "library_name"][append = "<lib>"][help = "Search <lib> in library path"]),
-        XBOX_ARG_BOOLEAN(&debug, [-g][name = "debug"][help = "Generate debug information in default format."]),
-        XBOX_ARG_STRS(&warning, [-W][name = "warning"][help = "Warning information option"]),
-        XBOX_ARG_STR(&optimize, [-O][--optimize][help = "Set optimization level to <number>."][append = "<number>"]),
-        XBOX_ARG_STR(&c_standard, [--std][help = "C Compile standard, supported: {c99}"][append="=<standard>"]),
-        XBOX_ARG_BOOLEAN(NULL, [-h][--help][help = "show help information"]),
-        XBOX_ARG_BOOLEAN(NULL, [-v][--version][help = "show version"]),
-        XBOX_ARG_STRS_GROUP(&files, [name = "src"]),
+            &library_path, "-L", NULL, "Add <dir> to the end of the main library path. ", "<dir>", "library_path"),
+        XBOX_ARG_STRS(&library_name, "-l", NULL, "Search <lib> in library path", "<lib>", "library_name"),
+        XBOX_ARG_BOOLEAN(&debug, "-g", NULL, "Generate debug information in default format.", NULL, "debug"),
+        XBOX_ARG_STRS(&warning, "-W", NULL, "Warning information option", NULL, NULL),
+        XBOX_ARG_STR(&optimize, "-O", "--optimize", "optimization level to <number>.", "<number>", NULL),
+        XBOX_ARG_STR(&c_standard, NULL, "--std", "C Compile standard, supported: {c99}", "=<standard>", NULL),
+        XBOX_ARG_BOOLEAN(NULL, "-h", "--help", "show help information", NULL, "help"),
+        XBOX_ARG_BOOLEAN(NULL, "-v", "--version", "show version", NULL, "version"),
+        XBOX_ARG_STRS_GROUP(&files, NULL, NULL, NULL, NULL, "src"),
         XBOX_ARG_END()};
 
     XBOX_argparse parser;

@@ -5,14 +5,17 @@ int main(int argc, const char **argv) {
     char *s, *dest;
     int src;
     int *other_numbers;
-    argparse_option options[] = {XBOX_ARG_BOOLEAN(NULL, [-h][--help][help = "show help information"]),
-                                 XBOX_ARG_BOOLEAN(NULL, [-v][--version][help = "show version"]),
-                                 XBOX_ARG_INT(&i, [-i][--input][help = "input file"]),
-                                 XBOX_ARG_STR(&s, [-s][--string]),
-                                 XBOX_ARG_STR_GROUP(&dest, [name = dest][help = "destination"]),
-                                 XBOX_ARG_INT_GROUP(&src, [name = src][help = "source"]),
-                                 XBOX_ARG_INTS_GROUP(&other_numbers, [name = "other-number"][help = "catch the other number..."]),
-                                 XBOX_ARG_END()};
+    argparse_option options[] = {
+        XBOX_ARG_BOOLEAN(NULL, "-h", "--help", "show help information", NULL, "help"),
+        XBOX_ARG_BOOLEAN(NULL, "-v", "--version", "show version", NULL, "version"),
+        XBOX_ARG_INT(&i, "-i", "--input", "input file", NULL, "input"),
+        XBOX_ARG_STR(&s, "-s", "--string", NULL, NULL, "string"),
+        XBOX_ARG_STR_GROUP(&dest, NULL, NULL, "destination", NULL, "dest"),
+        XBOX_ARG_INT_GROUP(&src, NULL, NULL, "source", NULL, "src"),
+        XBOX_ARG_INTS_GROUP(&other_numbers, NULL, NULL, "catch the other number ...", NULL, "other-number"),
+        XBOX_ARG_END()
+    };
+    
     XBOX_argparse parser;
     XBOX_argparse_init(&parser, options, 0);
     XBOX_argparse_describe(&parser,

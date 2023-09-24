@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+
 #define XBOX_LOG(fmt, ...) printf("[%s]:[%4d] " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 #define XBOX_TYPE(t) #t
 #define XBOX_NAME(name) _##name
@@ -179,83 +180,6 @@ const char* XBOX_get_last_path(const char* path) {
         }
     }
 }
-int is_image(const char* name) {
-    const char* ext = strrchr(name, '.');
-    if (ext == NULL) {
-        return 0;
-    }
-    if (strcasecmp(ext, ".jpg") == 0 || strcasecmp(ext, ".jpeg") == 0 || strcasecmp(ext, ".png") == 0 ||
-        strcasecmp(ext, ".bmp") == 0 || strcasecmp(ext, ".svg") == 0 || strcasecmp(ext, ".gif") == 0) {
-        return 1;
-    }
-    return 0;
-}
-
-int is_archive(const char* path) {
-    const char* ext = strrchr(path, '.');  // 获取文件名中的扩展名
-    if (ext != NULL) {
-        if (strcasecmp(ext, ".zip") == 0 || strcasecmp(ext, ".rar") == 0 || strcasecmp(ext, ".tar") == 0 ||
-            strcasecmp(ext, ".gz") == 0 || strcasecmp(ext, ".bz2") == 0) {
-            // 如果扩展名匹配,则认为是压缩包
-            return 1;
-        }
-    }
-    // 如果扩展名不匹配,则认为不是压缩包
-    return 0;
-}
-
-/**
- * @brief 使用 ASNI 虚拟控制序列终端彩色打印
- *
- * @param word 打印的字
- * @param full_path 全路径
- */
-char* XBOX_file_print(const char* word, const char* full_path) {
-    char* color_code = NULL;
-    struct stat file_stat;
-    static char result[XBOX_PRINT_BUFFER_SIZE];
-    if (!isatty(1)) {
-        sprintf(result, "%s", word);
-        return result;
-    }
-    if (stat(full_path, &file_stat) == -1) {
-        // error occurred while getting file status
-        color_code = XBOX_ANSI_COLOR_RESET;  // set the color to default
-        sprintf(result, "%s%s%s", color_code, word, XBOX_ANSI_COLOR_RESET);
-        return result;
-    }
-    if (S_ISREG(file_stat.st_mode)) {
-        // regular file
-        if (file_stat.st_mode & S_IXUSR || file_stat.st_mode & S_IXGRP || file_stat.st_mode & S_IXOTH) {
-            // file has execute permission
-            color_code = XBOX_ANSI_COLOR_GREEN;  // set the color to green
-        } else if (is_image(full_path)) {
-            // image file
-            color_code = XBOX_ANSI_COLOR_MAGENTA;  // set the color to magenta
-        } else if (is_archive(full_path)) {
-            color_code = XBOX_ANSI_COLOR_RED;  // set the color to red
-        } else {
-            color_code = XBOX_ANSI_COLOR_RESET;  // set the color to default
-        }
-    } else if (S_ISDIR(file_stat.st_mode)) {
-        // directory
-        color_code = XBOX_ANSI_COLOR_BLUE;
-    } else if (S_ISLNK(file_stat.st_mode)) {
-        // symbolic link
-        color_code = XBOX_ANSI_COLOR_CYAN;
-    } else if (S_ISFIFO(file_stat.st_mode)) {
-        // named pipe (FIFO)
-        color_code = XBOX_ANSI_COLOR_MAGENTA;
-    } else if (S_ISSOCK(file_stat.st_mode)) {
-        // local-domain socket
-        color_code = XBOX_ANSI_COLOR_YELLOW;
-    } else {
-        // unknown file type
-        color_code = XBOX_ANSI_COLOR_RESET;
-    }
-    sprintf(result, "%s%s%s", color_code, word, XBOX_ANSI_COLOR_RESET);
-    return result;
-}
 
 /**
  * @brief 返回文件的[读/写/执行]权限的字符串
@@ -301,7 +225,7 @@ char* XBOX_stat_access_mode(mode_t mode) {
     return buf;
 }
 
-int XBOX_number_length(int number) {
+int XBOX_number_length(long long number) {
     int size_length = 0;
     while (number) {
         size_length++;
