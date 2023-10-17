@@ -8,16 +8,15 @@ int main(int argc, const char **argv) {
     argparse_option options[] = {
         XBOX_ARG_BOOLEAN(NULL, "-h", "--help", "show help information", NULL, "help"),
         XBOX_ARG_BOOLEAN(NULL, "-v", "--version", "show version", NULL, "version"),
-        XBOX_ARG_INT(&integer, "-i", "--input", "input file", " <NUMBER>", "input"),
+        XBOX_ARG_INT(&integer, "-i", "--input", "input file", "  <NUMBER>", "input"),
         XBOX_ARG_STR(&str, "-s", "--string", NULL, " <STRING>", "string"),
         XBOX_ARG_STR_GROUP(&dest, NULL, NULL, "destination", NULL, "dest"),
         XBOX_ARG_INT_GROUP(&src, NULL, NULL, "source", NULL, "src"),
         XBOX_ARG_INTS_GROUP(&other_numbers, NULL, NULL, "catch the other number ...", NULL, "other-number"),
-        XBOX_ARG_END()
-    };
-    
+        XBOX_ARG_END()};
+
     XBOX_argparse parser;
-    XBOX_argparse_init(&parser, options, 0);
+    XBOX_argparse_init(&parser, options, XBOX_ARGPARSE_ENABLE_ARG_STICK);
     XBOX_argparse_describe(&parser,
                            "main",
                            "\nA brief description of what the program does and how it works.",

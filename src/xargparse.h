@@ -179,6 +179,14 @@ int XBOX_ismatch(XBOX_argparse *parser, char *name);
 
 /**
  * @brief 查找参数匹配的位置
+
+   ./main 100 -i 200
+          |    | |
+          1    2 3
+
+   ./main -abc -d 100
+           |||  | |
+           123  4 5
  *
  * @param parser
  * @param name
