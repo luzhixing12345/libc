@@ -1,5 +1,5 @@
 
-#include "../src/xargparse.h"
+#include "xargparse.h"
 
 char *output = NULL;
 char **include_path = NULL;
@@ -19,7 +19,7 @@ int main(int argc, const char **argv) {
         XBOX_ARG_STR(&output, "-o", NULL, "Place the output into <file>.", " <file>", NULL),
         XBOX_ARG_STRS(&include_path, "-I", NULL, "Add <dir> to the end of the main include path.", "<dir>", "include"),
         XBOX_ARG_STRS(
-            &library_path, "-L", NULL, "Add <dir> to the end of the main library path. ", "<dir>", "library_path"),
+            &library_path, "-L", NULL, "Add <dir> to the end of the main library path.", "<dir>", "library_path"),
         XBOX_ARG_STRS(&library_name, "-l", NULL, "Search <lib> in library path", "<lib>", "library_name"),
         XBOX_ARG_BOOLEAN(&debug, "-g", NULL, "Generate debug information in default format.", NULL, "debug"),
         XBOX_ARG_STRS(&warning, "-W", NULL, "Warning information option", NULL, NULL),

@@ -1,15 +1,15 @@
-#include "../src/xargparse.h"
+#include "xargparse.h"
 
 int main(int argc, const char **argv) {
-    int i;
-    char *s, *dest;
+    int integer;
+    char *str, *dest;
     int src;
     int *other_numbers;
     argparse_option options[] = {
         XBOX_ARG_BOOLEAN(NULL, "-h", "--help", "show help information", NULL, "help"),
         XBOX_ARG_BOOLEAN(NULL, "-v", "--version", "show version", NULL, "version"),
-        XBOX_ARG_INT(&i, "-i", "--input", "input file", NULL, "input"),
-        XBOX_ARG_STR(&s, "-s", "--string", NULL, NULL, "string"),
+        XBOX_ARG_INT(&integer, "-i", "--input", "input file", " <NUMBER>", "input"),
+        XBOX_ARG_STR(&str, "-s", "--string", NULL, " <STRING>", "string"),
         XBOX_ARG_STR_GROUP(&dest, NULL, NULL, "destination", NULL, "dest"),
         XBOX_ARG_INT_GROUP(&src, NULL, NULL, "source", NULL, "src"),
         XBOX_ARG_INTS_GROUP(&other_numbers, NULL, NULL, "catch the other number ...", NULL, "other-number"),
@@ -19,7 +19,7 @@ int main(int argc, const char **argv) {
     XBOX_argparse parser;
     XBOX_argparse_init(&parser, options, 0);
     XBOX_argparse_describe(&parser,
-                           "ls",
+                           "main",
                            "\nA brief description of what the program does and how it works.",
                            "\nAdditional description of the program after the description of the arguments.");
     XBOX_argparse_parse(&parser, argc, argv);
@@ -30,10 +30,10 @@ int main(int argc, const char **argv) {
         printf("v0.0.1\n");
     }
     if (XBOX_ismatch(&parser, "input")) {
-        printf("i = %d\n", i);
+        printf("i = %d\n", integer);
     }
     if (XBOX_ismatch(&parser, "string")) {
-        printf("s = %s\n", s);
+        printf("s = %s\n", str);
     }
     if (XBOX_ismatch(&parser, "dest")) {
         printf("dest = %s\n", dest);

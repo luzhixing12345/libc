@@ -1,48 +1,32 @@
 
 CC = gcc
-CFLAGS = -Wall -Wunused -Werror -Wformat-security
+CFLAGS =  -Wall -Wunused -Werror -Wformat-security -Wshadow -Wpedantic -Wstrict-aliasing -Wuninitialized -Wnull-dereference -Wformat=2
 
 SRC = $(wildcard examples/*.c)
 OBJ = $(SRC:.c=.o)
 EXE = $(SRC:.c=)
 
+XBOX_SRC = $(wildcard src/*.c)
+XBOX_OBJ = $(XBOX_SRC:.c=.o)
+
+ifeq ($(MAKECMDGOALS),debug)
+CFLAGS+=-g
+endif
+
+debug: all 
+
 all: $(EXE)
 
-$(EXE): %: %.o
-	$(CC) $< -o $@
+$(EXE): %: %.o $(XBOX_OBJ)
+	$(CC) $^ -o $@
 
-$(OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -Isrc/ -c $< -o $@
 
 .PHONY: clean
 
 clean:
-	rm $(EXE) $(OBJ)
-
-## for develop
-XBOX_HEADER_FILES = $(wildcard src/*.h)
-TARGET_DIR = xbox
-
-link: $(XBOX_HEADER_FILES)
-	@rm -r ~/coreutils/src/xbox
-	@rm -r ~/binutils/src/xbox
-	@rm -r ~/git/src/xbox
-	@mkdir -p ~/coreutils/src/xbox
-	@mkdir -p ~/binutils/src/xbox
-	@mkdir -p ~/git/src/xbox
-	@ln -s ~/libc/src/*.h ~/coreutils/src/xbox
-	@ln -s ~/libc/src/*.h ~/binutils/src/xbox
-	@ln -s ~/libc/src/*.h ~/git/src/xbox
-	@echo finished link
-	
-ulink:
-	@-rm -r ~/coreutils/src/xbox
-	@-rm -r ~/binutils/src/xbox
-	@-rm -r ~/git/src/xbox
-	@cp -r ~/libc/src/ ~/coreutils/src/xbox
-	@cp -r ~/libc/src/ ~/binutils/src/xbox
-	@cp -r ~/libc/src/ ~/git/src/xbox
-	@echo remove link
+	rm $(EXE) $(OBJ) $(XBOX_OBJ)
 
 
 test:
