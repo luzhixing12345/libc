@@ -2,13 +2,13 @@
 
 int main(int argc, const char **argv) {
     int integer;
-    char *str, *dest;
+    char *str, *dest = NULL;
     int src;
     int *other_numbers;
     argparse_option options[] = {
         XBOX_ARG_BOOLEAN(NULL, "-h", "--help", "show help information", NULL, "help"),
         XBOX_ARG_BOOLEAN(NULL, "-v", "--version", "show version", NULL, "version"),
-        XBOX_ARG_INT(&integer, "-i", "--input", "input file", "  <NUMBER>", "input"),
+        XBOX_ARG_INT(&integer, "-i", "--input", "input file", " <NUMBER>", "input"),
         XBOX_ARG_STR(&str, "-s", "--string", NULL, " <STRING>", "string"),
         XBOX_ARG_STR_GROUP(&dest, NULL, NULL, "destination", NULL, "dest"),
         XBOX_ARG_INT_GROUP(&src, NULL, NULL, "source", NULL, "src"),
