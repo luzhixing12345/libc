@@ -1,7 +1,6 @@
 
 
-#ifndef XBOX_XUTILS_H
-#define XBOX_XUTILS_H
+#pragma once
 
 #include <dirent.h>
 #include <linux/limits.h>
@@ -90,4 +89,11 @@ char* XBOX_stat_access_mode(mode_t mode);
  */
 int XBOX_number_length(long long number);
 
-#endif // XBOX_XUTILS_H
+
+/**
+ * @brief 判断文件是否存在
+ * 
+ * @param path 
+ * @return int 
+ */
+int XBOX_is_file_exist(const char* path);

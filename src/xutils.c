@@ -213,3 +213,8 @@ int XBOX_number_length(long long number) {
     }
     return size_length;
 }
+
+int XBOX_is_file_exist(const char *path) {
+    struct stat buffer;
+    return (stat(path, &buffer) == 0);
+}

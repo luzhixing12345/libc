@@ -3,7 +3,9 @@
 linux:
 - 目录: 1
 - 终端: 2
+- socket: 3
 工具库:
 - 命令行参数解析: 1
+- unicode: 2
 libc:
 - LD_PRELOAD: 1
