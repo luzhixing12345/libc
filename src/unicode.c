@@ -13,11 +13,8 @@ uchar *XBOX_char2uchar(const char *text, size_t *length) {
     uchar *str = (uchar *)malloc(sizeof(uchar) * (l + 1));
     char *p = (char *)text;
     int counter = 0;
-    while (1) {
+    while (*p != 0) {
         unsigned int codepoint = get_next_uchar(&p);
-        if (*p == '\0') {
-            break;
-        }
         str[counter++] = codepoint;
     }
     str = realloc(str, sizeof(uchar) * counter);
