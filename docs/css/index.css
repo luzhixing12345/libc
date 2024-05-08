@@ -207,7 +207,7 @@ blockquote {
     margin-bottom: 0;
 }
 
-.markdown-body ol ol,
+/* .markdown-body ol ol,
 .markdown-body ul ol {
     list-style-type: lower-roman;
 }
@@ -217,7 +217,7 @@ blockquote {
 .markdown-body ul ol ol,
 .markdown-body ul ul ol {
     list-style-type: lower-alpha;
-}
+} */
 
 .markdown-body ul {
     margin-top: 0;
@@ -252,6 +252,17 @@ blockquote {
 ul>li>ul>li {
     margin-top: 10px;
     /* 通过调整10px来设置上边距大小 */
+}
+
+/* ul 后面的文字加一个间距 */
+.markdown-body>ul~p,
+.markdown-body>ol~p,
+.markdown-body>ul~blockquote,
+.markdown-body>ol~blockquote .markdown-body>ul~pre,
+.markdown-body>ol~pre,
+.markdown-body>ul~a,
+.markdown-body>ol~a {
+    margin-top: 16px;
 }
 
 .markdown-body table {
@@ -351,6 +362,12 @@ ul>li>ul>li {
     border-radius: 5px;
 }
 
+.markdown-body ol ul,
+.markdown-body ul ol {
+    padding-left: 1em;
+    margin-top: 10px;
+}
+
 .markdown-body ol li blockquote {
     margin-top: 10px;
 }
@@ -392,9 +409,9 @@ ul>li>ul>li {
 /* 切换文章按钮 */
 .next-front {
     position: fixed;
-    right: 6%;;
-    top: 60%;;
-    width: 10%;;
+    right: 6%;
+    top: 60%;
+    width: 10%;
     /* white-space:nowrap; */
 }
 
@@ -410,6 +427,8 @@ ul>li>ul>li {
     height: 90px;
 }
 
+/* 对目录树的调整 */
+
 .dir-tree::-webkit-scrollbar {
     display: none;
     /* Chrome Safari */
@@ -421,7 +440,7 @@ ul>li>ul>li {
     left: 6%;
     top: 10%;
     width: 10%;
-    min-width: 100px;
+    max-width: 200px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     background-color: #f6f8fa;
     border-radius: 10px;
@@ -479,16 +498,16 @@ ul>li>ul>li {
     text-decoration: none;
     color: #000;
     /* https://www.bilibili.com/video/BV1Dc41147sW */
-    background: linear-gradient(to right, #000, #000) no-repeat right bottom;
+    /* background: linear-gradient(to right, #000, #000) no-repeat right bottom;
     background-size: 0 2px;
-    transition: background-size 1000ms;
+    transition: background-size 1000ms; */
 }
 
 .dir-tree a:hover {
     font-weight: bold;
     color: #000;
-    background-position-x: left;
-    background-size: 100% 2px;
+    /* background-position-x: left;
+    background-size: 100% 2px; */
 }
 
 .dir-tree ul ul li a {
@@ -558,10 +577,19 @@ ul>li>ul>li {
     text-decoration: underline;
 }
 
-.markdown-body input {
-    margin-top: 10px;
-    margin-bottom: 10px;
+
+.markdown-body ul:has(input[type="checkbox"]) {
+    list-style-type: none;
+    padding-left: 0.5em;
+    /* margin-bottom: 8px; */
 }
+
+.markdown-body input[type="checkbox"] {
+    margin-right: 0.5em;
+    /* 复选框和文本之间的间距 */
+}
+
+/* 对小标题索引树的调整 */
 
 .header-navigator {
     display: none;

@@ -1,0 +1,3 @@
+
+#define RWX (S_IRWXU | S_IRWXG | S_IRWXO)
+#define RW (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)

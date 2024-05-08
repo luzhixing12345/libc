@@ -23,7 +23,6 @@ rwildcard = $(foreach d, $(wildcard $1*), $(call rwildcard,$d/,$2) \
 SRC = $(call rwildcard, $(SRC_PATH), %.$(SRC_EXT))
 OBJ = $(SRC:$(SRC_EXT)=o)
 
-$(info $(OBJ))
 
 ifeq ($(MAKECMDGOALS),debug)
 CFLAGS+=-g

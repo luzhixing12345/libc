@@ -60,3 +60,6 @@ main
 kcc
 
 notes/
+apue.3e
+*.gz
+a*

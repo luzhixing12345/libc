@@ -4,6 +4,7 @@ linux:
 - 目录: 1
 - 终端: 2
 - socket: 3
+- macro: 4
 工具库:
 - 命令行参数解析: 1
 - unicode: 2
