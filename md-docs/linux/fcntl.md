@@ -181,3 +181,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 ```
+
+open twice vs open then dup/fork + write append + kernel debug
+
+18min https://www.bilibili.com/video/BV1j24y1x7UH
