@@ -62,6 +62,7 @@ kcc
 notes/
 apue.3e
 *.gz
-a*
+a
+a.c
 *.txt
 netcode/
