@@ -10,3 +10,6 @@ linux:
 - unicode: 2
 libc:
 - LD_PRELOAD: 1
+clib:
+- hashtable: 1
+- glib: 2

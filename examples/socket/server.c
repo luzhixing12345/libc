@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 #include <ctype.h>
 
-#define SERVER_PORT 8000
+#define SERVER_PORT 8080
 #define MAX_PENDING_CONNECTIONS 5
 #define BUFFER_SIZE 80
 
@@ -50,7 +50,7 @@ int main() {
         }
         write(client_socket, buf, n);
         close(client_socket);
-        break;
+        // break;
     }
 
     close(server_socket);

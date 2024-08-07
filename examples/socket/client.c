@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define SERVER_PORT 8000
+#define SERVER_PORT 8080
 #define BUFFER_SIZE 80
 
 int main(int argc, char **argv) {
@@ -26,7 +26,9 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    char buf[BUFFER_SIZE] = {"hello TCP"};
+    char buf[BUFFER_SIZE];
+    printf("Enter message: ");
+    fgets(buf, sizeof(buf), stdin);
 
     write(client_socket, buf, strlen(buf));
 
