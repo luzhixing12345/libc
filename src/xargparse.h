@@ -20,14 +20,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "xstring.h"
+#define MAX(a, b)                  ((a) > (b) ? (a) : (b))
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-#define XBOX_LENGTH_MISMATCH 65
-#define XBOX_UNSUPPORTED_TYPE 66
-#define XBOX_REQUIRE_ARGUMENT 67
-#define XBOX_FORMAT_ERROR 68
+#define XBOX_LENGTH_MISMATCH       65
+#define XBOX_UNSUPPORTED_TYPE      66
+#define XBOX_REQUIRE_ARGUMENT      67
+#define XBOX_FORMAT_ERROR          68
 
 /*
     -s            --long-name       help information...
@@ -46,15 +44,15 @@ left_space   mid_space           right_space
                       total_space
  */
 
-#define XBOX_HELP_INFO_LEFT_SPACE 2
-#define XBOX_HELP_INFO_MID_SPACE 3
+#define XBOX_HELP_INFO_LEFT_SPACE  2
+#define XBOX_HELP_INFO_MID_SPACE   3
 #define XBOX_HELP_INFO_RIGHT_SPACE 3
-#define XBOX_HELP_INFO_LENGTH 80   // 帮助信息 80 字符换行
-#define XBOX_HELP_INFO_INTERVAL 3  // 帮助信息列间距
+#define XBOX_HELP_INFO_LENGTH      80  // 帮助信息 80 字符换行
+#define XBOX_HELP_INFO_INTERVAL    3   // 帮助信息列间距
 
-#define __XBOX_ARGS_BUILD_ERROR "[Args Build Error]"
-#define __XBOX_ARGS_PARSE_ERROR "[Args Parse Error]"
-#define __XBOX_ARGS_PARSE_WARNING "[Args Parse Warning]"
+#define __XBOX_ARGS_BUILD_ERROR    "[Args Build Error]"
+#define __XBOX_ARGS_PARSE_ERROR    "[Args Parse Error]"
+#define __XBOX_ARGS_PARSE_WARNING  "[Args Parse Warning]"
 
 #define __XBOX_ARGS_NEED_FREE(type) \
     (!((type == __ARGPARSE_OPT_BOOLEAN) || (type == __ARGPARSE_OPT_INT) || (type == __ARGPARSE_OPT_INT_GROUP)))

@@ -30,34 +30,31 @@ typedef size_t (*hash_t)(void*, size_t);
 /****************** STRUCTURES ******************/
 
 typedef struct HTNode {
-	struct HTNode* next;
-	void* key;
-	void* value;
+    struct HTNode* next;
+    void* key;
+    void* value;
 
 } HTNode;
 
 typedef struct HashTable {
-	size_t size;
-	size_t threshold;
-	size_t capacity;
+    size_t size;
+    size_t threshold;
+    size_t capacity;
 
-	size_t key_size;
-	size_t value_size;
+    size_t key_size;
+    size_t value_size;
 
-	comparison_t compare;
-	hash_t hash;
+    comparison_t compare;
+    hash_t hash;
 
-	HTNode** nodes;
+    HTNode** nodes;
 
 } HashTable;
 
 /****************** INTERFACE ******************/
 
 /* Setup */
-int ht_setup(HashTable* table,
-						 size_t key_size,
-						 size_t value_size,
-						 size_t capacity);
+int ht_setup(HashTable* table, size_t key_size, size_t value_size, size_t capacity);
 
 int ht_copy(HashTable* first, HashTable* second);
 int ht_move(HashTable* first, HashTable* second);
@@ -72,8 +69,7 @@ int ht_contains(HashTable* table, void* key);
 void* ht_lookup(HashTable* table, void* key);
 const void* ht_const_lookup(const HashTable* table, void* key);
 
-#define HT_LOOKUP_AS(type, table_pointer, key_pointer) \
-	(*(type*)ht_lookup((table_pointer), (key_pointer)))
+#define HT_LOOKUP_AS(type, table_pointer, key_pointer) (*(type*)ht_lookup((table_pointer), (key_pointer)))
 
 int ht_erase(HashTable* table, void* key);
 int ht_clear(HashTable* table);

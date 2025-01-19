@@ -16,4 +16,7 @@ BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
   IndentBraces: true
-SortIncludes: false # 不对头文件名进行排序
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+MaxEmptyLinesToKeep: 1
+AlignEscapedNewlines: Left
+
