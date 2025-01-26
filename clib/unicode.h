@@ -13,7 +13,7 @@ typedef unsigned int uchar;
  * @param length 长度
  * @return uchar* (need free)
  */
-uchar *XBOX_char2uchar(const char *text, size_t *length);
+uchar *char2uchar(const char *text, size_t *length);
 
 /**
  * @brief 将单个 unicode char 输出到 buf
@@ -22,4 +22,4 @@ uchar *XBOX_char2uchar(const char *text, size_t *length);
  * @param buf buf[5]
  * @return int
  */
-int XBOX_uchar2char(unsigned int codepoint, char *buf);
+int uchar2char(unsigned int codepoint, char *buf);

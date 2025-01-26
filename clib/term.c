@@ -7,6 +7,8 @@
  *@Github: luzhixing12345
  */
 
+#include "term.h"
+
 #include <dirent.h>
 #include <linux/limits.h>
 #include <stdio.h>
@@ -14,14 +16,13 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "xterm.h"
 
 #define DEFUALT_LS_COLORS                                                        \
     "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;" \
     "33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st="   \
     "37;44:ex=01;32:"
 
-void XBOX_print_invalid_color_option() {
+void print_invalid_color_option() {
     printf("Valid arguments are:\n");
     printf("- 'always', 'yes', 'force'\n");
     printf("- 'never', 'no', 'none'\n");
@@ -34,7 +35,7 @@ void XBOX_print_invalid_color_option() {
  * @param word
  * @return char* 返回拼接后的字符串
  */
-char *XBOX_colorful_print(XBOX_term_word *word) {
+char *colorful_print(term_word *word) {
     static char vt_seq[1024];
     int pos = 0;
     char *p;
@@ -63,7 +64,7 @@ char *XBOX_colorful_print(XBOX_term_word *word) {
     }
     strcpy(vt_seq + pos, word->word);
     pos += strlen(word->word);
-    p = (char *)XBOX_TERM_FONT_DEFAULT;
+    p = (char *)TERM_FONT_DEFAULT;
     strcpy(vt_seq + pos, p);
     pos += strlen(p);
     vt_seq[pos] = 0;
@@ -90,7 +91,7 @@ int check_default_dc_config(char *name, char default_dc_config[18][3]) {
  * @param lscolors_str
  * @param database
  */
-void parse_ls_colors(char *lscolors_str, XBOX_dircolor_database *database) {
+void parse_ls_colors(char *lscolors_str, dircolor_database *database) {
     int length = strlen(lscolors_str);
     int item_number = 0;
     for (int i = 0; i < length; i++) {
@@ -152,11 +153,11 @@ void parse_ls_colors(char *lscolors_str, XBOX_dircolor_database *database) {
 /**
  * @brief 初始化 dircolors 的颜色数据库
  *
- * @param database 需要调用 XBOX_free_dc_database
+ * @param database 需要调用 free_dc_database
  */
-void XBOX_init_dc_database(XBOX_dircolor_database **database) {
+void init_dc_database(dircolor_database **database) {
     char *lscolors_str = getenv("LS_COLORS");
-    *database = (XBOX_dircolor_database *)malloc(sizeof(XBOX_dircolor_database));
+    *database = (dircolor_database *)malloc(sizeof(dircolor_database));
     if (!lscolors_str) {
         lscolors_str = (char *)DEFUALT_LS_COLORS;
     }
@@ -165,23 +166,23 @@ void XBOX_init_dc_database(XBOX_dircolor_database **database) {
 
 /**
  * @brief 释放 dircolors 数据库
- * 
- * @param database 
+ *
+ * @param database
  */
-void XBOX_free_dc_database(XBOX_dircolor_database *database) {
+void free_dc_database(dircolor_database *database) {
     free(database->dc_kvs);
     free(database);
 }
 
 /**
  * @brief 使用虚拟控制序列打印文件名
- * 
- * @param file_name 
- * @param full_path 
- * @param database 
- * @return char* 
+ *
+ * @param file_name
+ * @param full_path
+ * @param database
+ * @return char*
  */
-const char *XBOX_filename_print(const char *file_name, const char *full_path, XBOX_dircolor_database *database) {
+const char *filename_print(const char *file_name, const char *full_path, dircolor_database *database) {
     if (!database) {
         // database 为 NULL 说明不显示颜色
         return file_name;
@@ -244,7 +245,7 @@ const char *XBOX_filename_print(const char *file_name, const char *full_path, XB
                     color_code = database->sg;
                 } else {
                     // 文件名后缀匹配
-                    int dot_pos = XBOX_findChar(file_name, '.', -1);
+                    int dot_pos = findChar(file_name, '.', -1);
                     int suffix_match = 0;
                     if (dot_pos != -1) {
                         for (int i = 0; i < database->item_number; i++) {
@@ -276,8 +277,6 @@ const char *XBOX_filename_print(const char *file_name, const char *full_path, XB
             color_code = database->mh;
         }
     }
-    sprintf(result, "\033[%sm%s%s", color_code, file_name, XBOX_TERM_FONT_DEFAULT);
+    sprintf(result, "\033[%sm%s%s", color_code, file_name, TERM_FONT_DEFAULT);
     return result;
 }
-
-

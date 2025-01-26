@@ -1,5 +1,5 @@
 
-#include "xutils.h"
+#include "utils.h"
 
 #include <linux/limits.h>
 #include <stdio.h>
@@ -10,12 +10,12 @@
  *
  * @param path 路径名
  * @param flag
-    - XBOX_DIR_IGNORE_HIDDEN: 不包含.开头的
-    - XBOX_DIR_IGNORE_CURRENT: 不包含.和..
-    - XBOX_DIR_ALL: 全部包含
- * @return XBOX_Dir* 需要调用 XBOX_freedir 释放
+    - DIR_IGNORE_HIDDEN: 不包含.开头的
+    - DIR_IGNORE_CURRENT: 不包含.和..
+    - DIR_ALL: 全部包含
+ * @return Dir* 需要调用 freedir 释放
  */
-XBOX_Dir* XBOX_opendir(const char* path, int flag) {
+Dir* read_dir(const char* path, int flag) {
     DIR* dir;
     struct dirent* entry;
 
@@ -30,14 +30,13 @@ XBOX_Dir* XBOX_opendir(const char* path, int flag) {
         exit(1);
     }
 
-    XBOX_Dir* directory = (XBOX_Dir*)malloc(sizeof(XBOX_Dir));
-    memset(directory, 0, sizeof(XBOX_Dir));
+    Dir* directory = (Dir*)malloc(sizeof(Dir));
+    memset(directory, 0, sizeof(Dir));
     while ((entry = readdir(dir)) != NULL) {
-        if ((flag & XBOX_DIR_IGNORE_HIDDEN) && entry->d_name[0] == '.') {
+        if ((flag & DIR_IGNORE_HIDDEN) && entry->d_name[0] == '.') {
             continue;
         }
-        if ((flag & XBOX_DIR_IGNORE_CURRENT) &&
-            (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))) {
+        if ((flag & DIR_IGNORE_CURRENT) && (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))) {
             continue;
         }
         directory->count++;
@@ -49,17 +48,16 @@ XBOX_Dir* XBOX_opendir(const char* path, int flag) {
         }
     }
     rewinddir(dir);
-    directory->dp = (XBOX_File**)malloc(sizeof(XBOX_File*) * directory->count);
+    directory->dp = (File**)malloc(sizeof(File*) * directory->count);
     for (int i = 0; i < directory->count; i++) {
-        directory->dp[i] = (XBOX_File*)malloc(sizeof(XBOX_File));
+        directory->dp[i] = (File*)malloc(sizeof(File));
     }
     int i = 0;
     while ((entry = readdir(dir)) != NULL) {
-        if ((flag & XBOX_DIR_IGNORE_HIDDEN) && entry->d_name[0] == '.') {
+        if ((flag & DIR_IGNORE_HIDDEN) && entry->d_name[0] == '.') {
             continue;
         }
-        if ((flag & XBOX_DIR_IGNORE_CURRENT) &&
-            (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))) {
+        if ((flag & DIR_IGNORE_CURRENT) && (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))) {
             continue;
         }
         length = strlen(entry->d_name);
@@ -79,7 +77,7 @@ XBOX_Dir* XBOX_opendir(const char* path, int flag) {
  *
  * @param dir
  */
-void XBOX_freedir(XBOX_Dir* directory) {
+void freedir(Dir* directory) {
     directory->parent = NULL;
     for (int i = 0; i < directory->count; i++) {
         free(directory->dp[i]);
@@ -95,7 +93,7 @@ void XBOX_freedir(XBOX_Dir* directory) {
  * @param ...
  * @return char*
  */
-char* XBOX_path_join(const char* path, ...) {
+char* path_join(const char* path, ...) {
     static char result[PATH_MAX];
     memset(result, 0, PATH_MAX);
     va_list args;
@@ -124,7 +122,7 @@ char* XBOX_path_join(const char* path, ...) {
  * @param path
  * @return const char*
  */
-const char* XBOX_get_last_path(const char* path) {
+const char* get_last_path(const char* path) {
     static char result[PATH_MAX];
     const char* p = strrchr(path, '/');
     if (p == NULL) {
@@ -153,7 +151,7 @@ const char* XBOX_get_last_path(const char* path) {
  * @param mode
  * @return char*
  */
-char* XBOX_stat_access_mode(mode_t mode) {
+char* stat_access_mode(mode_t mode) {
     static char buf[11];
     memset(buf, 0, 11);
     buf[1] = (mode & S_IRUSR) ? 'r' : '-';
@@ -205,7 +203,7 @@ char* XBOX_stat_access_mode(mode_t mode) {
  * @param number
  * @return int
  */
-int XBOX_number_length(long long number) {
+int number_length(long long number) {
     int size_length = 0;
     while (number) {
         size_length++;
@@ -214,7 +212,7 @@ int XBOX_number_length(long long number) {
     return size_length;
 }
 
-int XBOX_is_file_exist(const char *path) {
+int is_file_exist(const char* path) {
     struct stat buffer;
     return (stat(path, &buffer) == 0);
 }

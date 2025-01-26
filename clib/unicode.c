@@ -1,14 +1,15 @@
 
 
 #include "unicode.h"
+
 #include <stddef.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static unsigned int get_next_uchar(char **pos);
 
-uchar *XBOX_char2uchar(const char *text, size_t *length) {
+uchar *char2uchar(const char *text, size_t *length) {
     size_t l = strlen(text);
     uchar *str = (uchar *)malloc(sizeof(uchar) * (l + 1));
     char *p = (char *)text;
@@ -110,7 +111,7 @@ static unsigned int get_next_uchar(char **pos) {
  * @param buf 存储UTF-8编码的缓冲区, 5字节
  * @return int 编码后的字节数
  */
-int XBOX_uchar2char(unsigned int codepoint, char *buf) {
+int uchar2char(unsigned int codepoint, char *buf) {
     if (codepoint <= 0x7F) {
         // 单字节字符
         buf[0] = codepoint & 0xFF;

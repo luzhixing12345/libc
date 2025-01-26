@@ -53,10 +53,10 @@ OBJCOPY		:= objcopy
 # ------------------------- #
 CFLAGS 			:= -DCONFIG_VERSION=\"$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)\" -g
 LDFLAGS 		:= 
-LIBS			:= -L.. -lclib
+LIBS			:= -L../clib -lclib
 DEFINES     	:= 
 THIRD_LIB   	:= 
-INCLUDE_PATH 	:= ../clib
+INCLUDE_PATH 	:= ..
 # ------------------------- #
 
 ifneq ($(strip $(INCLUDE_PATH)),)
@@ -151,7 +151,7 @@ lib: $(STATIC_LIB)
 EXECUTABLES = $(OBJS:.o=)
 %: %.o
 	$(E) -e "  LINK    \033[1;32m" $@ "\033[0m"
-	$(Q) $(CC) $(CFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
+	$(Q) $(CC) $< $(LDFLAGS) $(LIBS) -o $@
 
 each: $(EXECUTABLES)
 .PHONY: each
