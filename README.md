@@ -1,37 +1,45 @@
-# libc
+# clib
 
-本仓库为笔者和 C 相关的一些学习记录, 见 [libc document](https://luzhixing12345.github.io/libc/), 
-代码部分对应文档按文件夹内容大致分为三部分
+clib 是一个小型的 C 工具库, 用精简的方式实现了一些 C 标准库没有提供但是日常开发中常见的功能需求, 包括
+
+- 线程安全的日志
+- 命令行参数解析
+- hashmap
+- 目录, 文件相关的处理(判断文件存在, 递归删除目录...)
+- 终端彩色打印
+
+本项目大部分代码是笔者从网络上搜集到的其他大佬开发好的轮子并稍作修改, 并封装为简单易用的 API
+
+## 安装(TODO)
 
 ```bash
-├── examples    # linux C 使用示例程序
-└── src         # 第三方库
+sudo apt install clib
 ```
 
-- examples: linux 标准库函数和 C 标准库函数的使用示例, 建议配合文档阅读
-- src: 笔者编写的一个基础 C 工具库 XBOX (第三方库), 用于完成日常 C 编程的一些造轮子的辅助任务
+## 源码编译
 
-## 编译 & 运行
+本库无第三方依赖, 且代码量相对较小, 可以轻松的嵌入到其他 C 项目中, 完全可以(推荐)直接将 clib/ 拷贝到其他项目中并整体参与链接
+
+或者可以将其作为静态库编译
 
 ```bash
-## 编译全部
 make
-
-## 编译 examples 下的所有示例程序
-make examples
-
-## 编译 libc
-make libc
-
-## 编译第三方库
-make xbox
 ```
 
-具体的安装/使用方式, 请参考文档对应内容
+## 示例
+
+examples/ 下包含了所有的示例代码
+
+```bash
+cd example
+make
+```
+
+每一个 .c 文件对应一项功能, 可以运行对应的可执行文件来查看
 
 ## 文档
 
-[libc document](https://luzhixing12345.github.io/libc/)
+[libc document](https://luzhixing12345.github.io/clib/)
 
 ## 参考
 

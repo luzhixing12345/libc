@@ -474,7 +474,7 @@ left_space   mid_space           right_space
  * @param str
  * @return argparse_option 返回匹配的option, 否则返回 NULL
  */
-argparse_option *check_argparse_loptions(XBOX_argparse *parser, const char *str) {
+static argparse_option *check_argparse_loptions(XBOX_argparse *parser, const char *str) {
     for (int i = 0; i < parser->args_number; i++) {
         argparse_option *option = &(parser->options[i]);
         if (option->type == __ARGPARSE_OPT_INT_GROUP || option->type == __ARGPARSE_OPT_STR_GROUP ||
@@ -495,7 +495,7 @@ argparse_option *check_argparse_loptions(XBOX_argparse *parser, const char *str)
  * @param str
  * @return argparse_option* 返回匹配的option, 否则返回 NULL
  */
-argparse_option *check_argparse_soptions(XBOX_argparse *parser, const char *str) {
+static argparse_option *check_argparse_soptions(XBOX_argparse *parser, const char *str) {
     for (int i = 0; i < parser->args_number; i++) {
         argparse_option *option = &(parser->options[i]);
         if (option->type == __ARGPARSE_OPT_INT_GROUP || option->type == __ARGPARSE_OPT_STR_GROUP ||
@@ -517,7 +517,7 @@ argparse_option *check_argparse_soptions(XBOX_argparse *parser, const char *str)
  * @param str
  * @return int 如果已经没有可解析的组则出现错误,返回1
  */
-int check_argparse_groups(XBOX_argparse *parser, const char *str, int *match_pos) {
+static int check_argparse_groups(XBOX_argparse *parser, const char *str, int *match_pos) {
     for (int i = 0; i < parser->args_number; i++) {
         argparse_option *option = &(parser->options[i]);
 
@@ -817,7 +817,7 @@ void XBOX_argparse_parse(XBOX_argparse *parser, int argc, const char **argv) {
  * @param name
  * @return int 如果未匹配返回0; 如果匹配,返回值为匹配的个数
  */
-int XBOX_ismatch(XBOX_argparse *parser, char *name) {
+int XBOX_ismatch(XBOX_argparse *parser, const char *name) {
     for (int i = 0; i < parser->args_number; i++) {
         argparse_option *option = &(parser->options[i]);
         if (option->name && !strcmp(option->name, name)) {

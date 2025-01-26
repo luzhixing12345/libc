@@ -19,8 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX(a, b)                  ((a) > (b) ? (a) : (b))
+#include <sys/param.h>
 
 #define XBOX_LENGTH_MISMATCH       65
 #define XBOX_UNSUPPORTED_TYPE      66
@@ -173,7 +172,7 @@ void XBOX_argparse_parse(XBOX_argparse *parser, int argc, const char **argv);
  * @param name
  * @return int 如果未匹配返回0; 如果匹配,返回值为匹配的个数
  */
-int XBOX_ismatch(XBOX_argparse *parser, char *name);
+int XBOX_ismatch(XBOX_argparse *parser, const char *name);
 
 /**
  * @brief 查找参数匹配的位置

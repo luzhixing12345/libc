@@ -26,15 +26,15 @@ ARCH ?= $(shell uname -m | sed -e s/i.86/i386/ -e s/ppc.*/powerpc/ \
 # ------------------------- #
 CC          	:= gcc
 TARGET      	:=
-LIBNAME     	:= clib
-SRC_PATH    	:= clib
+LIBNAME     	:=
+SRC_PATH    	:= . 
 SRC_EXT     	:= c
 
 # ------------------------- #
-STATIC_LIB 		:= $(SRC_PATH)/lib$(LIBNAME).a
+STATIC_LIB 		:= lib$(LIBNAME).a
 
 # default: [all, lib, each]
-default: lib
+default: each
 
 # ------------------------- #
 #          BINARIES         #
