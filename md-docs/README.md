@@ -1,14 +1,9 @@
 # libc
 
-本仓库主要用于记录 C 标准库函数和 Linux 库函数的使用
+clib 是一个小型的 C 工具库, 用精简的方式实现了一些 C 标准库没有提供但是日常开发中常见的功能需求, 包括
 
-同时本仓库也包含一个基础 C 工具库, 包括命令行参数处理和字符串处理. 笔者的另外两个项目 [coreutils](https://github.com/luzhixing12345/coreutils) 和 [binutils](https://github.com/luzhixing12345/binutils) 都使用到了本仓库的一些函数
-
-## 文档
-
-[libc document](https://luzhixing12345.github.io/libc/)
-
-## 参考
-
-- [星星说编程](https://space.bilibili.com/50657960/)
-- man 手册
+- 日志(线程安全)
+- 命令行参数解析
+- hashmap
+- 目录, 文件相关的处理(判断文件存在, 递归删除目录...)
+- 终端彩色打印

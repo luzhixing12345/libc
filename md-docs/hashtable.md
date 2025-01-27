@@ -2,9 +2,7 @@
 # hashtable
 
 ```c
-#include <stdio.h>
-
-#include "hashtable.h"
+#include <clib/clib.h>
 
 int main(int argc, const char* argv[]) {
 	HashTable table;

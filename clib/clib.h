@@ -5,3 +5,4 @@
 #include "log.h"
 #include "utils.h"
 #include "argparse.h"
+#include "tqdm.h"
