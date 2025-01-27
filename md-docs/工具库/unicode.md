@@ -15,7 +15,7 @@
  * @param length 长度
  * @return uchar* (need free)
  */
-uchar *XBOX_char2uchar(const char *text, size_t *length);
+uchar *char2uchar(const char *text, size_t *length);
 
 /**
  * @brief 将单个 unicode char 输出到 buf
@@ -24,7 +24,7 @@ uchar *XBOX_char2uchar(const char *text, size_t *length);
  * @param buf buf[5]
  * @return int
  */
-int XBOX_uchar2char(unsigned int codepoint, char *buf);
+int uchar2char(unsigned int codepoint, char *buf);
 ```
 
 ## example
@@ -35,10 +35,10 @@ int XBOX_uchar2char(unsigned int codepoint, char *buf);
 int main(int argc, char **argv) {
     char *text = "大街上Dahl金钱和维拉省的";
     size_t length;
-    uchar *ucharing = XBOX_char2uchar(text, &length);
+    uchar *ucharing = char2uchar(text, &length);
     char buf[5];
     for (int i = 0; i < length; i++) {
-        XBOX_uchar2char(ucharing[i], buf);
+        uchar2char(ucharing[i], buf);
         printf("%s\n", buf);
     }
     return 0;

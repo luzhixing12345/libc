@@ -2,6 +2,6 @@
 #pragma once
 
 #include "file.h"
-#include "logging.h"
+#include "log.h"
 #include "utils.h"
 #include "argparse.h"

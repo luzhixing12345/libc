@@ -41,7 +41,7 @@
     })
 
 void __LOG(int level, const char *file, const char *func, int line, const char *format, ...);
-void logging_setlevel(int new_level);
-int logging_init(const char *path);
+void log_set_level(int new_level);
+int log_init(const char *path);
 
 #endif

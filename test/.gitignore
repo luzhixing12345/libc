@@ -1,0 +1,9 @@
+
+*
+!*.c
+!Makefile
+!.gitignore
+!log/
+!argparse/
+!hashmap/
+!*.sh

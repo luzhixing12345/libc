@@ -26,15 +26,15 @@ ARCH ?= $(shell uname -m | sed -e s/i.86/i386/ -e s/ppc.*/powerpc/ \
 # ------------------------- #
 CC          	:= gcc
 TARGET      	:=
-LIBNAME     	:= clib
-SRC_PATH    	:= clib
+LIBNAME     	:= 
+SRC_PATH    	:= .
 SRC_EXT     	:= c
 
 # ------------------------- #
 STATIC_LIB 		:= $(SRC_PATH)/lib$(LIBNAME).a
 
 # default: [all, lib, each]
-default: lib
+default: each
 
 # ------------------------- #
 #          BINARIES         #
@@ -53,10 +53,10 @@ OBJCOPY		:= objcopy
 # ------------------------- #
 CFLAGS 			:= -DCONFIG_VERSION=\"$(VERSION).$(PATCHLEVEL).$(SUBLEVEL)\" -g
 LDFLAGS 		:= 
-LIBS			:= -L.. -lclib
+LIBS			:= -L../clib -lclib
 DEFINES     	:= 
 THIRD_LIB   	:= 
-INCLUDE_PATH 	:= ../clib
+INCLUDE_PATH 	:= ..
 # ------------------------- #
 
 ifneq ($(strip $(INCLUDE_PATH)),)
@@ -101,7 +101,6 @@ rwildcard = $(foreach d, $(filter-out .., $(wildcard $1*)), \
 ifneq ($(strip $(SRC_PATH)),)
     SRC += $(call rwildcard, $(SRC_PATH), %.$(SRC_EXT))
 endif
-
 OBJS = $(SRC:$(SRC_EXT)=o)
 
 comma = ,
@@ -149,7 +148,7 @@ lib: $(STATIC_LIB)
 .PHONY: lib
 
 EXECUTABLES = $(OBJS:.o=)
-%: %.o
+%: %.o ../clib/libclib.a
 	$(E) -e "  LINK    \033[1;32m" $@ "\033[0m"
 	$(Q) $(CC) $(CFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
 

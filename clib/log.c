@@ -7,10 +7,11 @@
  * more details.
  */
 
-#include "clib.h"
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
+
+#include "clib.h"
 
 static int loglevel = DEFAULT_LOG_LEVEL;
 static FILE *logfile = NULL;
@@ -44,24 +45,30 @@ void __LOG(int level, const char *file, const char *func, int line, const char *
     pthread_mutex_lock(&lock);
     va_start(ap, format);
     if (!logfile) {
-        fprintf(stdout,
-                "[%s%-5s\x1b[0m][\x1b[90m%s:%d(%s)\x1b[0m] ",
-                logcolor_str[level],
-                loglevel_str[level],
-                file,
-                line,
-                func);
+        if (isatty(STDOUT_FILENO)) {
+            fprintf(stdout,
+                    "[%s%-5s\x1b[0m][\x1b[90m%s:%d(%s)\x1b[0m] ",
+                    logcolor_str[level],
+                    loglevel_str[level],
+                    file,
+                    line,
+                    func);
+        } else {
+            fprintf(stdout, "[%s][%s:%d(%s)] ", loglevel_str[level], file, line, func);
+        }
         vfprintf(stdout, format, ap);
+        fprintf(stdout, "\n");
     } else {
         fprintf(logfile, "[%s][%s:%d(%s)] ", loglevel_str[level], file, line, func);
         vfprintf(logfile, format, ap);
+        fprintf(logfile, "\n");
     }
     fflush(logfile);
     va_end(ap);
     pthread_mutex_unlock(&lock);
 }
 
-void logging_setlevel(int new_level) {
+void log_set_level(int new_level) {
     loglevel = new_level;
 }
 
@@ -71,7 +78,7 @@ void logging_setlevel(int new_level) {
  * @param path
  * @return int
  */
-int logging_init(const char *path) {
+int log_init(const char *path) {
     if (path == NULL) {
         return 0;
     }
