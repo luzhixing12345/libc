@@ -30,3 +30,8 @@ int main(int argc, const char* argv[]) {
 	ht_destroy(&table);
 }
 ```
+
+## 参考
+
+- [hashtable](https://github.com/goldsborough/hashtable)
+- [hashmap](https://github.com/DavidLeeds/hashmap)

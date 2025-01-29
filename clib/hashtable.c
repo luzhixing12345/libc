@@ -1,10 +1,12 @@
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <stdio.h>
+// https://github.com/goldsborough/hashtable
 
 #include "hashtable.h"
+
+#include <assert.h>
+#include <bits/pthreadtypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int ht_setup(HashTable *table, size_t key_size, size_t value_size, size_t capacity) {
     assert(table != NULL);
@@ -26,6 +28,10 @@ int ht_setup(HashTable *table, size_t key_size, size_t value_size, size_t capaci
     table->compare = _ht_default_compare;
     table->size = 0;
 
+    // 初始化互斥锁
+    if (pthread_mutex_init(&table->lock, NULL) != 0) {
+        return HT_ERROR;
+    }
     return HT_SUCCESS;
 }
 
@@ -105,6 +111,9 @@ int ht_destroy(HashTable *table) {
     if (!ht_is_initialized(table))
         return HT_ERROR;
 
+    // 销毁互斥锁
+    pthread_mutex_destroy(&table->lock);
+
     for (chain = 0; chain < table->capacity; ++chain) {
         node = table->nodes[chain];
         while (node) {
@@ -131,6 +140,8 @@ int ht_insert(HashTable *table, void *key, void *value) {
     if (key == NULL)
         return HT_ERROR;
 
+    pthread_mutex_lock(&table->lock);
+
     if (_ht_should_grow(table)) {
         _ht_adjust_capacity(table);
     }
@@ -149,6 +160,8 @@ int ht_insert(HashTable *table, void *key, void *value) {
 
     ++table->size;
 
+    pthread_mutex_unlock(&table->lock);
+
     return HT_INSERTED;
 }
 
@@ -164,13 +177,16 @@ int ht_contains(HashTable *table, void *key) {
     if (key == NULL)
         return HT_ERROR;
 
+    pthread_mutex_lock(&table->lock);
     index = _ht_hash(table, key);
     for (node = table->nodes[index]; node; node = node->next) {
         if (_ht_equal(table, key, node->key)) {
+            pthread_mutex_unlock(&table->lock);
             return HT_FOUND;
         }
     }
 
+    pthread_mutex_unlock(&table->lock);
     return HT_NOT_FOUND;
 }
 
@@ -186,35 +202,16 @@ void *ht_lookup(HashTable *table, void *key) {
     if (key == NULL)
         return NULL;
 
+    pthread_mutex_lock(&table->lock);
     index = _ht_hash(table, key);
     for (node = table->nodes[index]; node; node = node->next) {
         if (_ht_equal(table, key, node->key)) {
+            pthread_mutex_unlock(&table->lock);
             return node->value;
         }
     }
 
-    return NULL;
-}
-
-const void *ht_const_lookup(const HashTable *table, void *key) {
-    const HTNode *node;
-    size_t index;
-
-    assert(table != NULL);
-    assert(key != NULL);
-
-    if (table == NULL)
-        return NULL;
-    if (key == NULL)
-        return NULL;
-
-    index = _ht_hash(table, key);
-    for (node = table->nodes[index]; node; node = node->next) {
-        if (_ht_equal(table, key, node->key)) {
-            return node->value;
-        }
-    }
-
+    pthread_mutex_unlock(&table->lock);
     return NULL;
 }
 
@@ -230,7 +227,8 @@ int ht_erase(HashTable *table, void *key) {
         return HT_ERROR;
     if (key == NULL)
         return HT_ERROR;
-
+    
+    pthread_mutex_lock(&table->lock);
     index = _ht_hash(table, key);
     node = table->nodes[index];
 
@@ -247,14 +245,17 @@ int ht_erase(HashTable *table, void *key) {
 
             if (_ht_should_shrink(table)) {
                 if (_ht_adjust_capacity(table) == HT_ERROR) {
+                    pthread_mutex_unlock(&table->lock);
                     return HT_ERROR;
                 }
             }
 
+            pthread_mutex_unlock(&table->lock);
             return HT_SUCCESS;
         }
     }
 
+    pthread_mutex_unlock(&table->lock);
     return HT_NOT_FOUND;
 }
 

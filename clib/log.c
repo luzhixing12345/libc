@@ -45,24 +45,21 @@ void __LOG(int level, const char *file, const char *func, int line, const char *
     pthread_mutex_lock(&lock);
     va_start(ap, format);
     if (!logfile) {
-        if (isatty(STDOUT_FILENO)) {
-            fprintf(stdout,
-                    "[%s%-5s\x1b[0m][\x1b[90m%s:%d(%s)\x1b[0m] ",
-                    logcolor_str[level],
-                    loglevel_str[level],
-                    file,
-                    line,
-                    func);
-        } else {
-            fprintf(stdout, "[%s][%s:%d(%s)] ", loglevel_str[level], file, line, func);
-        }
-        vfprintf(stdout, format, ap);
-        fprintf(stdout, "\n");
+        logfile = stdout;
+    }
+    if (isatty(fileno(logfile))) {
+        fprintf(logfile,
+                "[%s%-5s\x1b[0m][\x1b[90m%s:%d(%s)\x1b[0m] ",
+                logcolor_str[level],
+                loglevel_str[level],
+                file,
+                line,
+                func);
     } else {
         fprintf(logfile, "[%s][%s:%d(%s)] ", loglevel_str[level], file, line, func);
-        vfprintf(logfile, format, ap);
-        fprintf(logfile, "\n");
     }
+    vfprintf(logfile, format, ap);
+    fprintf(logfile, "\n");
     fflush(logfile);
     va_end(ap);
     pthread_mutex_unlock(&lock);

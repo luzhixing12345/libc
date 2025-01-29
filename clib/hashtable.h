@@ -3,37 +3,37 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <pthread.h>
 
 /****************** DEFINTIIONS ******************/
 
-#define HT_MINIMUM_CAPACITY 8
-#define HT_LOAD_FACTOR 5
+#define HT_MINIMUM_CAPACITY  8
+#define HT_LOAD_FACTOR       5
 #define HT_MINIMUM_THRESHOLD (HT_MINIMUM_CAPACITY) * (HT_LOAD_FACTOR)
 
-#define HT_GROWTH_FACTOR 2
-#define HT_SHRINK_THRESHOLD (1 / 4)
+#define HT_GROWTH_FACTOR     2
+#define HT_SHRINK_THRESHOLD  (1 / 4)
 
-#define HT_ERROR -1
-#define HT_SUCCESS 0
+#define HT_ERROR             -1
+#define HT_SUCCESS           0
 
-#define HT_UPDATED 1
-#define HT_INSERTED 0
+#define HT_UPDATED           1
+#define HT_INSERTED          0
 
-#define HT_NOT_FOUND 0
-#define HT_FOUND 01
+#define HT_NOT_FOUND         0
+#define HT_FOUND             01
 
-#define HT_INITIALIZER {0, 0, 0, 0, 0, NULL, NULL, NULL};
+#define HT_INITIALIZER       {0, 0, 0, 0, 0, NULL, NULL, NULL};
 
 typedef int (*comparison_t)(void*, void*, size_t);
 typedef size_t (*hash_t)(void*, size_t);
-
+typedef void (*ht_foreach_t)(void* key, void* value);
 /****************** STRUCTURES ******************/
 
 typedef struct HTNode {
     struct HTNode* next;
     void* key;
     void* value;
-
 } HTNode;
 
 typedef struct HashTable {
@@ -48,7 +48,7 @@ typedef struct HashTable {
     hash_t hash;
 
     HTNode** nodes;
-
+    pthread_mutex_t lock;
 } HashTable;
 
 /****************** INTERFACE ******************/
@@ -59,6 +59,10 @@ int ht_setup(HashTable* table, size_t key_size, size_t value_size, size_t capaci
 int ht_copy(HashTable* first, HashTable* second);
 int ht_move(HashTable* first, HashTable* second);
 int ht_swap(HashTable* first, HashTable* second);
+#define ht_foreach(k, v, table)                                             \
+    for (size_t chain = 0; chain < (table)->capacity; ++chain)              \
+        for (HTNode* node = (table)->nodes[chain]; node; node = node->next) \
+            for (bool _once = true; _once && ((k) = node->key, (v) = node->value); _once = false)
 
 /* Destructor */
 int ht_destroy(HashTable* table);
@@ -67,7 +71,6 @@ int ht_insert(HashTable* table, void* key, void* value);
 
 int ht_contains(HashTable* table, void* key);
 void* ht_lookup(HashTable* table, void* key);
-const void* ht_const_lookup(const HashTable* table, void* key);
 
 #define HT_LOOKUP_AS(type, table_pointer, key_pointer) (*(type*)ht_lookup((table_pointer), (key_pointer)))
 

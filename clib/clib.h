@@ -6,3 +6,4 @@
 #include "utils.h"
 #include "argparse.h"
 #include "tqdm.h"
+#include "hashtable.h"

@@ -190,6 +190,14 @@ release:
 	@cp $(EXE) $(RELEASE)/ 
 	tar -cvf $(TARGET).tar $(RELEASE)/
 
+# 输出配置信息, 包括 CFLAGS, LDFLAGS, LIBS
+config:
+	$(E) "CONFIG"
+	$(E) "  [SRC FILES]: $(shell echo $(SRC) | tr '\n' ' ')"
+	$(E) "  [CFLAGS]: $(CFLAGS)"
+	$(E) "  [LDFLAGS]: $(LDFLAGS)"
+	$(E) "  [LIBS]: $(LIBS)"
+
 help:
 	$(E) ""
 	$(E) "  [$(TARGET) compile help]"
@@ -197,10 +205,9 @@ help:
 	$(E) "    make              编译"
 	$(E) "    make help         帮助信息"
 	$(E) "    make clean        清除编译文件"
-	$(E) "    make all          编译"
+	$(E) "    make config       查看配置信息"
 	$(E) "    make install      安装"
 	$(E) "    make debug        调试模式"
-	$(E) "    make release      打包"
 	$(E) ""
 
 ifneq ($(MAKECMDGOALS),clean)

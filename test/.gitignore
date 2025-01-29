@@ -5,5 +5,5 @@
 !.gitignore
 !log/
 !argparse/
-!hashmap/
+!hashtable/
 !*.sh
